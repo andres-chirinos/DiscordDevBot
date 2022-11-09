@@ -15,9 +15,10 @@ class MyBot(commands.Bot):
         super().__init__(command_prefix = commands.when_mentioned_or(Prefix), help_command = None, case_insensitive = True, description = Description, intents = discord.Intents.all(), aplicaction_id = ApplicationId)
 
         self.initial_extensions = [
-            'cogs.voice',
+            'cogs.voice.voice',
             'cogs.webhook',
             'cogs.thread',
+            'cogs.register',
         ]
     
     async def setup_hook(self):
