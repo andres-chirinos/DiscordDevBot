@@ -16,7 +16,7 @@ class Register(commands.GroupCog, name = 'register'):
 
         self.nationalroleid = 1038518797021216809
 
-        self.asemblyforumid = 1035706603741138964
+        self.enterpriceforumid = 1035733706171764776
 
         self.grantnational.start()
 
@@ -64,11 +64,17 @@ class Register(commands.GroupCog, name = 'register'):
             await interaction.response.send_message(content = '🔴', ephemeral = True)
 
     #OnRegisterEnterpriceAdd
-    @commands.Cog.listener()
-    async def on_thread_create(self, thread):
-        if thread.parent_id == self.asemblyforumid:
-            print(thread)
-            await thread.send(content = f'🟢 <#{thread.id}> registrada')
+    #@commands.Cog.listener()
+    #async def on_thread_create(self, thread):
+    #    if thread.parent_id == self.enterpriceforumid:
+    #        print(thread)
+    #        await thread.send(content = f'🟢 <#{thread.id}> empresa registrada')
+
+    #OnRegisterEnterpriceRemove
+    #@commands.Cog.listener()
+    #async def on_thread_delete(self, thread):
+    #    if thread.parent_id == self.enterpriceforumid:
+    #        print(thread)
 
 async def setup(bot: commands.Bot):  
     await bot.add_cog(Register(bot), guild = discord.Object(id = int(os.getenv('SERVERGUILD', '1018676558652776558'))))        

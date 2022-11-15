@@ -45,25 +45,14 @@ class Thread(commands.GroupCog, name = 'thread'):
         app_commands.Choice(name="1 semana", value=10080),
         ])
     @app_commands.autocomplete(forumid = forum_autocomplete)
-    async def createpost(self, interaction: discord.Interaction, name: str, forumid: str, archive_in_minutes: int = None):
-        #try:
+    async def createpost(self, interaction: discord.Interaction, name: str, forumid: str, content: str, archive_in_minutes: int = None):
+        try:
             forum = interaction.guild.get_channel(int(forumid))
             if archive_in_minutes == None: archive_in_minutes = forum.default_auto_archive_duration
-            post = await forum.create_thread(name = name, auto_archive_duration = archive_in_minutes, content = 'content')
-            return await interaction.response.send_message(content = f'🟢 <#{post.id}>', ephemeral = True)
-        #except:
-        #    await interaction.response.send_message(content = '🔴', ephemeral = True)"""
-
-    #See archived threads
-    """@app_commands.command(name = 'threads', description = 'See all threads')
-    @app_commands.describe(limit = 'Amount of archived threads you want see')
-    async def threads(self, interaction: discord.Interaction, limit: int = 10):
-        threads = await asyncio.run(interaction.channel.archived_threads(limit = limit))
-        print(type(threads), list(threads))
-        for thread in threads:
-            print(thread)
-            #threadsdict.update({f'<#{thread.id}>': f'Is archived? {thread.archived}'})
-        await interaction.response.send_message(content = f'{threads}', ephemeral = True)"""
+            post = await forum.create_thread(name = name, auto_archive_duration = archive_in_minutes, content = content)
+            return await interaction.response.send_message(content = f'🟢 <#{post.thread.id}>', ephemeral = True)
+        except:
+            await interaction.response.send_message(content = '🔴', ephemeral = True)
 
 async def setup(bot: commands.Bot):   
     await bot.add_cog(Thread(bot), guild = discord.Object(id = int(os.getenv('SERVERGUILD', '1018676558652776558'))))        
