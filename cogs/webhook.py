@@ -6,6 +6,7 @@ from discord.ext import commands
 class Webhook(commands.GroupCog, name = 'webhook'):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+
         super().__init__()
 
     ##Webhook Handling

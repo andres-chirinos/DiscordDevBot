@@ -7,7 +7,7 @@ Prefix = os.getenv('PREFIX', '|')
 ApplicationId = int(os.getenv('APPID', '1031315927679123637'))
 ServerId = int(os.getenv('SERVERGUILD', '1018676558652776558'))
 Token = os.getenv('TOKEN', 'MTAzMTMxNTkyNzY3OTEyMzYzNw.GEEof1.zynT3R5CcMLm7hI08fW9D_9KKyOOU3Qg_uVnko')
-Description = 'Test bot description'
+Description = os.getenv('DESC', 'Prueba controlada sin variable')
 
 class MyBot(commands.Bot):
 
@@ -19,6 +19,8 @@ class MyBot(commands.Bot):
             'cogs.webhook',
             'cogs.thread',
             'cogs.register',
+            'cogs.message',
+            'cogs.minecraft',
         ]
     
     async def setup_hook(self):
@@ -31,7 +33,7 @@ class MyBot(commands.Bot):
         await super().close()
 
     async def on_ready(self):
-        await bot.change_presence(status = discord.Status.do_not_disturb, activity = discord.Game(f'[{Prefix}] Sustentando al gobierno de Dinamarca'))
+        await bot.change_presence(status = discord.Status.do_not_disturb, activity = discord.Game(f'[{Prefix}] {Description}'))
         print(f'{self.user} has connected to Discord!') 
 
     async def on_command_error(self, context, exception):
