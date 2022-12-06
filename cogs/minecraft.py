@@ -10,7 +10,7 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
         self.bot = bot
 
         self.serverchannelid = 1048249292122501141
-        self.servermessageid = 1049725556150779954
+        self.servermessageid = 1049759166132133969
 
         self.getserverstatus.start()
 

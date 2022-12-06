@@ -11,12 +11,12 @@ class Register(commands.GroupCog, name = 'register'):
         self.bot = bot
 
         self.foreignroleid = 1038518544012431390
-        self.permitmessageid = 1038536205878439966
+        self.permitmessageid = 1049759086822031463
         self.emojicheck = '🔴'
 
-        self.nationalroleid = 1038518797021216809
+        self.nationalroleid = 1049759653296361664
 
-        self.enterpriceforumid = 1035733706171764776
+        #self.enterpriceforumid = 1035733706171764776
 
         self.grantnational.start()
 
