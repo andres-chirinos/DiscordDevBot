@@ -6,6 +6,7 @@ from quart import Quart
 
 #Variables / Test bot values
 Prefix = os.getenv('PREFIX', '|')
+Port = int(os.getenv('PORT', '80'))
 ApplicationId = int(os.getenv('APPID', '1031315927679123637'))
 ServerId = int(os.getenv('SERVERGUILD', '1018676558652776558'))
 Token = os.getenv('TOKEN', 'MTAzMTMxNTkyNzY3OTEyMzYzNw.GEEof1.zynT3R5CcMLm7hI08fW9D_9KKyOOU3Qg_uVnko')
@@ -63,4 +64,4 @@ async def send_message():
     return 'OK', 200
 
 
-app.run(debug = True)#, port = 80)#, use_reloader = False)
+app.run(debug = True, port = Port)#, use_reloader = False)
