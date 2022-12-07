@@ -45,7 +45,7 @@ class Register(commands.GroupCog, name = 'register'):
         for member in members:
             if member is not self.bot and member.get_role(self.foreignroleid) is not None and int(member.joined_at.timestamp()) + 604800 <= int(now.timestamp()):
                 role = member.guild.get_role(self.nationalroleid)
-                await member.edit(roles=[role])
+                await member.add_roles(role)
 
     @grantnational.before_loop
     async def before_printer(self):

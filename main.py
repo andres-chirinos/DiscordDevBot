@@ -1,6 +1,8 @@
 import os
 import discord
 from discord.ext import commands
+import asyncio
+from quart import Quart
 
 #Variables / Test bot values
 Prefix = os.getenv('PREFIX', '|')
@@ -11,8 +13,8 @@ Description = os.getenv('DESC', 'Prueba controlada sin variable')
 
 class MyBot(commands.Bot):
 
-    def __init__(self):
-        super().__init__(command_prefix = commands.when_mentioned_or(Prefix), help_command = None, case_insensitive = True, description = Description, intents = discord.Intents.all(), aplicaction_id = ApplicationId)
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
 
         self.initial_extensions = [
             'cogs.voice.voice',
@@ -40,5 +42,25 @@ class MyBot(commands.Bot):
         print(f"[Error] {context.message.author} {exception}")
         await context.send(f'{exception}')
 
-bot = MyBot()
-bot.run(token = Token)
+app = Quart(__name__)
+bot = MyBot(command_prefix = commands.when_mentioned_or(Prefix), help_command = None, case_insensitive = True, description = Description, intents = discord.Intents.all(), aplicaction_id = ApplicationId)
+
+@app.before_serving
+async def before_serving():
+    loop = asyncio.get_event_loop()
+    await bot.login(Token) #bot.run(token = Token)
+    loop.create_task(bot.connect())
+
+@app.route('/')
+async def homepage():
+    return 'Homepage'
+    
+@app.route("/send", methods=["GET"])
+async def send_message():
+    # wait_until_ready and check for valid connection is missing here
+    channel = bot.get_channel(1018683741893312583)
+    await channel.send('XYZs')
+    return 'OK', 200
+
+
+app.run(debug = True)#, port = 80)#, use_reloader = False)
