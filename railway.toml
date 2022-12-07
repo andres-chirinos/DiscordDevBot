@@ -1,6 +1,5 @@
 [build]
-builder = "NIXPACKS"
-nixpacksConfigPath = "nixpacks.toml"
+builder = "HEROKU"
 
 [deploy]
 startCommand = "python main.py"
