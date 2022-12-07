@@ -60,8 +60,8 @@ async def homepage():
 async def send_message():
     # wait_until_ready and check for valid connection is missing here
     channel = bot.get_channel(1018683741893312583)
-    await channel.send('XYZs')
+    await channel.send('XYZz')
     return 'OK', 200
 
 
-app.run(debug = True, port = Port)#, use_reloader = False)
+app.run(host = '0.0.0.0',debug = True, port = Port)#, use_reloader = False)
