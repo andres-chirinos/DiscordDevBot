@@ -21,9 +21,9 @@ class MyBot(commands.Bot):
             'cogs.voice.voice',
             'cogs.webhook',
             'cogs.thread',
-            'cogs.register',
+            #'cogs.register',
             'cogs.message',
-            'cogs.minecraft',
+            #'cogs.minecraft',
         ]
     
     async def setup_hook(self):
@@ -44,24 +44,18 @@ class MyBot(commands.Bot):
         await context.send(f'{exception}')
 
 app = Quart(__name__)
+
+from pages.main import main
+app.register_blueprint(main, url_prefix = '/')
+
 bot = MyBot(command_prefix = commands.when_mentioned_or(Prefix), help_command = None, case_insensitive = True, description = Description, intents = discord.Intents.all(), aplicaction_id = ApplicationId)
 
 @app.before_serving
 async def before_serving():
     loop = asyncio.get_event_loop()
     await bot.login(Token) #bot.run(token = Token)
-    loop.create_task(bot.connect())
+    loop.create_task(bot.connect(), name = 'Bot refresh')
 
-@app.route('/')
-async def homepage():
-    return 'Homepage'
-    
-@app.route("/send", methods=["GET"])
-async def send_message():
-    # wait_until_ready and check for valid connection is missing here
-    channel = bot.get_channel(1018683741893312583)
-    await channel.send('XYZz')
-    return 'OK', 200
-
-
-app.run(host = '0.0.0.0',debug = True, port = Port)#, use_reloader = False)
+if __name__ == '__main__':
+    app.run(debug = True) #port=Port, debug=True)
+    #app.run(host = '0.0.0.0', port = Port)

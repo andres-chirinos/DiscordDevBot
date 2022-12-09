@@ -20,7 +20,7 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
         with urllib.request.urlopen("https://api.mcsrvstat.us/2/" + ip) as url:
             requestdata = json.load(url)
             if requestdata['online'] == True:
-                data = f"{requestdata['hostname']} is online {requestdata['players']['online']}/{requestdata['players']['max']}"
+                data = f"{requestdata['hostname']} is online {requestdata['players']['online']}/{requestdata['players']['max']}, {requestdata['version']}"
             else:
                 data = f"{requestdata['hostname']} is offline"
             return f"{data}, updated in <t:{round(datetime.datetime.now().timestamp())}>"
