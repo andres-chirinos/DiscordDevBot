@@ -21,9 +21,9 @@ class MyBot(commands.Bot):
             'cogs.voice.voice',
             'cogs.webhook',
             'cogs.thread',
-            #'cogs.register',
+            'cogs.register',
             'cogs.message',
-            #'cogs.minecraft',
+            'cogs.minecraft',
         ]
     
     async def setup_hook(self):

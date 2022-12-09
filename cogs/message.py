@@ -19,5 +19,27 @@ class Message(commands.GroupCog, name = 'message'):
         except:
             await interaction.response.send_message(content = '🔴', ephemeral = True)
 
+    #Edit thread
+    @app_commands.command(name = 'edit', description = 'Edit a message')
+    @app_commands.describe(text = 'Text to edit')
+    async def edit(self, interaction: discord.Interaction, messageid:str, text:str = None):
+        try:
+            message = await interaction.channel.fetch_message(int(messageid))
+            if text is None: text = message.content
+            await message.edit(content = text)
+            return await interaction.response.send_message(content = '🟢',ephemeral = True)
+        except:
+            await interaction.response.send_message(content = '🔴', ephemeral = True)
+
+    @app_commands.command(name = 'purge', description = 'Purge a messages')
+    @app_commands.describe(limit = 'Amount of messages want to purge')
+    async def purge(self, interaction: discord.Interaction, limit: int = None):
+        try:
+            await interaction.channel.purge(limit=limit)
+            return await interaction.response.send_message(content = f'🟢',ephemeral = True)
+        except:
+            await interaction.response.send_message(content = '🔴', ephemeral = True)
+
+
 async def setup(bot: commands.Bot):   
     await bot.add_cog(Message(bot), guild = discord.Object(id = int(os.getenv('SERVERGUILD', '1018676558652776558'))))        
