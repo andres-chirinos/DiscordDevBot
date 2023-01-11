@@ -59,5 +59,5 @@ async def before_serving():
 
 if __name__ == '__main__':
     #app.config['SERVER_NAME'] = "bot.up.railway.app"
-    app.run(debug = True) #port=Port, debug=True)
-    #app.run(host = '0.0.0.0', port = Port)
+    #app.run(debug = True) #port=Port, debug=True)
+    app.run(host = '0.0.0.0', port = Port)
