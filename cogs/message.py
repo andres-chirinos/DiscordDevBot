@@ -2,6 +2,7 @@ import os
 import discord
 from discord import app_commands
 from discord.ext import commands
+from __init__ import ServerId
 
 class Message(commands.GroupCog, name = 'message'):
     def __init__(self, bot: commands.Bot):
@@ -17,7 +18,7 @@ class Message(commands.GroupCog, name = 'message'):
             await interaction.channel.send(content=text)
             return await interaction.response.send_message(content = '🟢',ephemeral = True)
         except:
-            await interaction.response.send_message(content = '🔴', ephemeral = True)
+            await interaction.response.send_message(content = '🟥', ephemeral = True)
 
     #Edit thread
     @app_commands.command(name = 'edit', description = 'Edit a message')
@@ -29,7 +30,8 @@ class Message(commands.GroupCog, name = 'message'):
             await message.edit(content = text)
             return await interaction.response.send_message(content = '🟢',ephemeral = True)
         except:
-            await interaction.response.send_message(content = '🔴', ephemeral = True)
+            await interaction.response.send_message(content = '🟥', ephemeral = True)
+
 
     @app_commands.command(name = 'purge', description = 'Purge a messages')
     @app_commands.describe(limit = 'Amount of messages want to purge')
@@ -38,8 +40,9 @@ class Message(commands.GroupCog, name = 'message'):
             await interaction.channel.purge(limit=limit)
             return await interaction.response.send_message(content = f'🟢',ephemeral = True)
         except:
-            await interaction.response.send_message(content = '🔴', ephemeral = True)
+            await interaction.response.send_message(content = '🟥', ephemeral = True)
 
 
-async def setup(bot: commands.Bot):   
-    await bot.add_cog(Message(bot), guild = discord.Object(id = int(os.getenv('SERVERGUILD', '1018676558652776558'))))        
+
+async def setup(bot: commands.Bot):       
+    await bot.add_cog(Message(bot), guild = discord.Object(id = ServerId))       

@@ -1,12 +1,93 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acta libertaria</title>
+    <title>Arcaneva mapa</title>
+
+    <link rel="icon" type="image/png" href="https://api.mcsrvstat.us/icon/arcaneva.com">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: row;
+            grid-template-columns: auto auto;
+            background-color: black;
+            text-align: center;
+        }
+
+        .one {
+            height: 100%;
+            width: 80%;
+        }
+
+        .two {
+            height: 100%;
+            width: 20%;
+        }
+
+        #minecraft {
+            background-color: #000;
+            color: #AAA;
+            display: inline-block;
+            font-family: monospace;
+            letter-spacing: .1em;
+            padding: .5em;
+            white-space: pre-wrap
+        }
+
+        #minecraft img {
+            max-height: 100%;
+        }
+
+        /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
+        @media screen and (max-width: 900px) {
+            body {
+                display: block;
+                flex-direction: column;
+            }
+
+            .one {
+                height: 80%;
+                width: 100%;
+            }
+
+            .two {
+                height: 20%;
+                width: 100%;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <iframe src="https://drive.google.com/file/d/1wx_1Q4mrLcp09ez-LICdKHPuSdeK1VNn/preview" width="100%" height="600" allow="autoplay"></iframe>
+
+    <iframe class="one" src="https://mapa.arcaneva.com/#earth;flat;7224,64,-8212;0" frameborder="0"></iframe>
+
+    <div class="two">
+        <section id="minecraft">
+            <img src="https://api.mcsrvstat.us/icon/arcaneva.com"> 
+            <div></div> 
+        </section>
+        <iframe src="https://discord.com/widget?id=1053425785542811679&theme=dark" allowtransparency="true"
+            frameborder="0"
+            sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+    </div>
+    <script type="text/javascript">
+        fetch('https://api.mcsrvstat.us/2/arcaneva.com')
+            .then(res => res.json())
+            .then(out => document.getElementById('minecraft').innerHTML = (out.motd.html[0], out.motd.html[1]) )
+            .catch(err => { throw err });
+        
+    </script>
 </body>
+
 </html>

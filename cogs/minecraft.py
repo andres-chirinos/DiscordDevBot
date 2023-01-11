@@ -2,6 +2,7 @@ import os
 import discord
 from discord import app_commands
 from discord.ext import commands, tasks
+from __init__ import ServerId
 
 import urllib.request, json, datetime
 
@@ -28,7 +29,10 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
     @app_commands.command(name = 'serverstatus', description = 'Get a Minecraft server status')
     @app_commands.describe(ip = 'IP of server')
     async def send(self, interaction: discord.Interaction, ip:str):
-        await interaction.response.send_message(content = f'🟢 {self.get_server_info(ip)}',ephemeral = True)
+        try:
+            await interaction.response.send_message(content = f'🟢 {self.get_server_info(ip)}',ephemeral = True)
+        except:
+            await interaction.response.send_message(content = '🟥', ephemeral = True)
 
     #Revisar el estado del server.
     @tasks.loop(minutes=5)
@@ -42,4 +46,4 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
         await self.bot.wait_until_ready()
 
 async def setup(bot: commands.Bot):  
-    await bot.add_cog(Minecraft(bot), guild = discord.Object(id = int(os.getenv('SERVERGUILD', '1018676558652776558'))))        
+    await bot.add_cog(Minecraft(bot), guild = discord.Object(id = ServerId))        

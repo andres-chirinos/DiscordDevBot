@@ -2,6 +2,7 @@ import os
 import discord
 from discord import app_commands
 from discord.ext import commands
+from __init__ import ServerId
 
 class Webhook(commands.GroupCog, name = 'webhook'):
     def __init__(self, bot: commands.Bot):
@@ -18,7 +19,7 @@ class Webhook(commands.GroupCog, name = 'webhook'):
             webhook = await interaction.channel.create_webhook(name = name, avatar = None, reason = None)
             await interaction.response.send_message(content = f'🟢 `{webhook.url}`', ephemeral = True)
         except:
-            await interaction.response.send_message(content = '🔴', ephemeral = True)
+            await interaction.response.send_message(content = '🟥', ephemeral = True)
 
     #List webhooks
     async def webhook_autocomplete(self, interaction: discord.Interaction, current: str):
@@ -36,7 +37,7 @@ class Webhook(commands.GroupCog, name = 'webhook'):
                 if webhook.id == int(webhookid):
                     await interaction.response.send_message(content = f'🟢 `{webhook.url}`', ephemeral = True)
         except:
-            await interaction.response.send_message(content = '🔴', ephemeral = True)
+            await interaction.response.send_message(content = '🟥', ephemeral = True)
 
     #Delete webhook 
     @app_commands.command(name = 'delete', description = 'Delete webhook')
@@ -50,7 +51,7 @@ class Webhook(commands.GroupCog, name = 'webhook'):
                     await webhook.delete()
                     await interaction.response.send_message(content = '🟢', ephemeral = True)
         except:
-            await interaction.response.send_message(content = '🔴', ephemeral = True)
+            await interaction.response.send_message(content = '🟥', ephemeral = True)
 
 async def setup(bot: commands.Bot):   
-    await bot.add_cog(Webhook(bot), guild = discord.Object(id = int(os.getenv('SERVERGUILD', '1018676558652776558'))))        
+    await bot.add_cog(Webhook(bot), guild = discord.Object(id = ServerId))        

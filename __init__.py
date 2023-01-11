@@ -5,13 +5,14 @@ import asyncio
 from quart import Quart
 
 #Variables / Test bot values
+
 Prefix = os.getenv('PREFIX', '|')
 Port = int(os.getenv('PORT', '80'))
 ApplicationId = int(os.getenv('APPID', '1031315927679123637'))
 ServerId = int(os.getenv('SERVERGUILD', '1018676558652776558'))
 Token = os.getenv('TOKEN', 'MTAzMTMxNTkyNzY3OTEyMzYzNw.GEEof1.zynT3R5CcMLm7hI08fW9D_9KKyOOU3Qg_uVnko')
 Description = os.getenv('DESC', 'Prueba controlada sin variable')
-
+    
 class MyBot(commands.Bot):
 
     def __init__(self,*args,**kwargs):
@@ -45,8 +46,8 @@ class MyBot(commands.Bot):
 
 app = Quart(__name__)
 
-from pages.main import main
-app.register_blueprint(main, url_prefix = '/')
+from pages.webmain import webmain
+app.register_blueprint(webmain, url_prefix = '/')
 
 bot = MyBot(command_prefix = commands.when_mentioned_or(Prefix), help_command = None, case_insensitive = True, description = Description, intents = discord.Intents.all(), aplicaction_id = ApplicationId)
 
@@ -57,5 +58,6 @@ async def before_serving():
     loop.create_task(bot.connect(), name = 'Bot refresh')
 
 if __name__ == '__main__':
-    #app.run(debug = True) #port=Port, debug=True)
-    app.run(host = '0.0.0.0', port = Port)
+    #app.config['SERVER_NAME'] = "bot.up.railway.app"
+    app.run(debug = True) #port=Port, debug=True)
+    #app.run(host = '0.0.0.0', port = Port)
