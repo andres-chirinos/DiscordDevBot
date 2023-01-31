@@ -70,6 +70,6 @@ dictConfig({
 })
 
 if __name__ == '__main__':
-    app.run(debug = True)#, port = Port)
-    #app.run(host = '0.0.0.0', port = Port)
+    #app.run(debug = True)#, port = Port)
+    app.run(host = '0.0.0.0', port = Port)
 
