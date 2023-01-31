@@ -3,55 +3,25 @@ import discord
 from discord import app_commands
 from discord.ext import commands, tasks
 from discord.utils import get
+
 from __init__ import ServerId
+from cogs.register.views import Vote_view, Mission_view
 
 import datetime
-
-class Vote_view(discord.ui.View):
-    def __init__(self) -> None:
-        super().__init__(timeout=None)
-    
-    @discord.ui.button(label = "Aye", style = discord.ButtonStyle.green, custom_id = 'Aye')
-    async def VoteAye(self, interaction: discord.Interaction, button: discord.ui.Button):
-        try:
-            if interaction.user.get_role(1038518797021216809) is not None:
-                return await interaction.response.send_message(content = '🟢 Aye', ephemeral = True)
-            await interaction.response.send_message(content = '🔴', ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
-    
-    @discord.ui.button(label = "Nay", style = discord.ButtonStyle.red, custom_id = 'Nay')
-    async def VoteNay(self, interaction: discord.Interaction, button: discord.ui.Button):
-        try:
-            if interaction.user.get_role(1038518797021216809) is not None:
-                return await interaction.response.send_message(content = '🟢 Nay', ephemeral = True)
-            await interaction.response.send_message(content = '🔴', ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
-    
-    @discord.ui.button(label = "Abs", style = discord.ButtonStyle.grey, custom_id = 'Abs')
-    async def VoteAbs(self, interaction: discord.Interaction, button: discord.ui.Button):
-        try:
-            if interaction.user.get_role(1038518797021216809) is not None:
-                return await interaction.response.send_message(content = '🟢 Abs', ephemeral = True)
-            await interaction.response.send_message(content = '🔴', ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
-
 
 class Register(commands.GroupCog, name = 'register'):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
         self.foreignroleid = 1038518544012431390
-        self.permitmessageid = 1049759086822031463
+        self.permitmessageid = 1070020430737440778
         self.emojicheck = '🔴'
 
         self.inviteroleid = 1058390264588292199
 
         self.assemblyforumid = 1035706603741138964
 
-        self.grantnational.start()
+        self.grantinvite.start()
 
         super().__init__()
 
@@ -72,7 +42,7 @@ class Register(commands.GroupCog, name = 'register'):
 
     #Para adquirir la nacionalidad por naturalización.
     @tasks.loop(hours=24)
-    async def grantnational(self):
+    async def grantinvite(self):
         members = self.bot.guilds[0].members
         now = datetime.datetime.now()
         for member in members:
@@ -80,7 +50,7 @@ class Register(commands.GroupCog, name = 'register'):
                 role = member.guild.get_role(self.inviteroleid)
                 await member.add_roles(role)
 
-    @grantnational.before_loop
+    @grantinvite.before_loop
     async def before_printer(self):
         await self.bot.wait_until_ready()
 
@@ -93,8 +63,8 @@ class Register(commands.GroupCog, name = 'register'):
             if advice is True:
                 await interaction.channel.send(content = f'Se ascendió a <@!{member.id}> al cargo de <@&{role.id}>')
             return await interaction.response.send_message(content = f'🟢 Ascendiste a <@!{member.id}>', ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
     #OnRegisterPostAdd
     @commands.Cog.listener()
@@ -109,8 +79,18 @@ class Register(commands.GroupCog, name = 'register'):
             message = await interaction.channel.send(content = '<@&1038518797021216809.> __Votación__', view = Vote_view())
 
             return await interaction.response.send_message(content = '🟢', ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+    
+    #Para poner el solicitar una mision
+    @app_commands.command(name = 'mision', description = 'create a mision')
+    async def createmision(self, interaction: discord.Interaction): 
+        try: 
+            await interaction.channel.send(content = 'Para solicitar una misión diplomatica', view = Mission_view())
+
+            return await interaction.response.send_message(content = '🟢', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
 async def setup(bot: commands.Bot):
     bot.add_view(Vote_view())

@@ -24,8 +24,8 @@ class Voice(commands.GroupCog, name = 'voice'):
                 self.voiceclient = await channel.connect(self_deaf=True)
                 return await interaction.response.send_message(content = '🟢', ephemeral = True)
             await interaction.response.send_message(content = '🔴', ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
     #Leave a voice channel
     @app_commands.command(name = 'leave', description = 'Leave a voice channel')
@@ -35,8 +35,8 @@ class Voice(commands.GroupCog, name = 'voice'):
                 self.voiceclient = await self.voiceclient.disconnect()
                 return await interaction.response.send_message(content = '🟢', ephemeral = True)
             await interaction.response.send_message(content = '🔴', ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
     #Text to speech command
     @app_commands.command(name = 'gtts', description = 'Text to speech in a voice channel')
@@ -48,8 +48,8 @@ class Voice(commands.GroupCog, name = 'voice'):
                 self.voiceclient.play(source = discord.FFmpegPCMAudio(source = 'cogs/voice/voice.mp3'))
                 return await interaction.response.send_message(content = '🟢')
             await interaction.response.send_message(content = '🔴', ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
     #Text to speech listener
     @commands.Cog.listener()

@@ -31,8 +31,8 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
     async def send(self, interaction: discord.Interaction, ip:str):
         try:
             await interaction.response.send_message(content = f'🟢 {self.get_server_info(ip)}',ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
     #Revisar el estado del server.
     @tasks.loop(minutes=5)

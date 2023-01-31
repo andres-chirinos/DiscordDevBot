@@ -22,7 +22,7 @@ class MyBot(commands.Bot):
             'cogs.voice.voice',
             'cogs.webhook',
             'cogs.thread',
-            'cogs.register',
+            'cogs.register.register',
             'cogs.message',
             'cogs.minecraft',
         ]
@@ -57,7 +57,19 @@ async def before_serving():
     await bot.login(Token) #bot.run(token = Token)
     loop.create_task(bot.connect(), name = 'Bot refresh')
 
+from logging.config import dictConfig
+
+dictConfig({
+    'version': 1,
+    'loggers': {
+        'quart.app': {
+            'level': 'ERROR',
+            'level': 'INFO',
+        },
+    },
+})
+
 if __name__ == '__main__':
-    #app.config['SERVER_NAME'] = "bot.up.railway.app"
-    #app.run(debug = True) #port=Port, debug=True)
-    app.run(host = '0.0.0.0', port = Port)
+    app.run(debug = True)#, port = Port)
+    #app.run(host = '0.0.0.0', port = Port)
+

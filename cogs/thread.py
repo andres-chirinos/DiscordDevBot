@@ -19,15 +19,15 @@ class Thread(commands.GroupCog, name = 'thread'):
         app_commands.Choice(name="3 dias", value=4320),
         app_commands.Choice(name="1 semana", value=10080),
         ])
-    async def createthread(self, interaction: discord.Interaction, name: str, archive_in_minutes: int = None, channel_id: str = None):
+    async def createthread(self, interaction: discord.Interaction, name: str, archive_in_minutes: int = None, private: bool = False, channel_id: str = None):
         try:
-            if archive_in_minutes == None: archive_in_minutes = interaction.channel.default_auto_archive_duration
+            if private is True: private = discord.ChannelType.private_thread
             if channel_id == None: channel_id = interaction.channel.id
             Channel = interaction.guild.get_channel(int(channel_id))
-            thread = await Channel.create_thread(name = name, message = None, type = discord.ChannelType.public_thread, auto_archive_duration = archive_in_minutes)
+            thread = await Channel.create_thread(name = name, type = private, auto_archive_duration = archive_in_minutes, invitable = False)
             return await interaction.response.send_message(content = f'🟢 <#{thread.id}>',ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
     
     #List forums
     async def forum_autocomplete(self, interaction: discord.Interaction, current: str):
@@ -48,10 +48,10 @@ class Thread(commands.GroupCog, name = 'thread'):
         try:
             forum = interaction.guild.get_channel(int(forumid))
             if archive_in_minutes == None: archive_in_minutes = forum.default_auto_archive_duration
-            post = await forum.create_thread(name = name, auto_archive_duration = archive_in_minutes, content = content)
+            post = await forum.create_thread(name = name, auto_archive_duration = archive_in_minutes, content = content, applied_tags=None)
             return await interaction.response.send_message(content = f'🟢 <#{post.thread.id}>', ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
 async def setup(bot: commands.Bot):   
     await bot.add_cog(Thread(bot), guild = discord.Object(id = ServerId))        

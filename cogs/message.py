@@ -17,8 +17,8 @@ class Message(commands.GroupCog, name = 'message'):
         try:
             await interaction.channel.send(content=text)
             return await interaction.response.send_message(content = '🟢',ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
     #Edit thread
     @app_commands.command(name = 'edit', description = 'Edit a message')
@@ -29,8 +29,8 @@ class Message(commands.GroupCog, name = 'message'):
             if text is None: text = message.content
             await message.edit(content = text)
             return await interaction.response.send_message(content = '🟢',ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
 
     @app_commands.command(name = 'purge', description = 'Purge a messages')
@@ -39,8 +39,8 @@ class Message(commands.GroupCog, name = 'message'):
         try:
             await interaction.channel.purge(limit=limit)
             return await interaction.response.send_message(content = f'🟢',ephemeral = True)
-        except:
-            await interaction.response.send_message(content = '🟥', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
 
 
