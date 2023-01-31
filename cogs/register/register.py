@@ -14,7 +14,7 @@ class Register(commands.GroupCog, name = 'register'):
         self.bot = bot
 
         self.foreignroleid = 1038518544012431390
-        self.permitmessageid = 1070020430737440778
+        self.permitmessageid = 1070034949924733059
         self.emojicheck = '🔴'
 
         self.inviteroleid = 1058390264588292199
@@ -31,6 +31,7 @@ class Register(commands.GroupCog, name = 'register'):
         member = get(self.bot.get_all_members(), id = payload.user_id)
         if member and member.id != self.bot.application_id and payload.message_id == self.permitmessageid and payload.emoji.name == self.emojicheck:
             role = member.guild.get_role(self.foreignroleid)
+            
             await member.edit(roles=[role])
     
     #Para rechazar el permiso de entrada
