@@ -1,15 +1,22 @@
 import discord
+from discord.ext import commands
 
 class Mission_view(discord.ui.View):
     def __init__(self) -> None:
         super().__init__(timeout = None)
+        self.cooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.member)
     
     @discord.ui.button(label = "Solicitar", style = discord.ButtonStyle.red, custom_id = 'mission')
     async def Mission(self, interaction: discord.Interaction, button: discord.ui.Button):
         try:
-            thread = await interaction.channel.create_thread(name = f'{interaction.user.name} mission', type = discord.ChannelType.private_thread, invitable = False, reason = f'{interaction.user.name} solicited a mission.')
-            await thread.add_user(interaction.user)
-            return await interaction.response.send_message(content = '🟢', ephemeral = True)
+            interaction.message.author = interaction.user
+            bucket = self.cooldown.get_bucket(interaction.message)
+            retry = bucket.update_rate_limit()
+            if not retry:
+                thread = await interaction.channel.create_thread(name = f'{interaction.user.name} mission', type = discord.ChannelType.private_thread, invitable = False, reason = f'{interaction.user.name} solicited a mission.')
+                await thread.add_user(interaction.user)
+                return await interaction.response.send_message(content = '🟢', ephemeral = True)
+            await interaction.response.send_message(content = f'🔴 Please wait {round(retry)}s.', ephemeral = True)
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
     
