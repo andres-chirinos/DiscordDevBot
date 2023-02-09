@@ -1,6 +1,7 @@
-from quart import Blueprint, render_template, redirect
+from quart import Blueprint, render_template
+import os
 
-webmain = Blueprint('webmain', __name__, template_folder='templates', static_folder='static')#, root_path='/')
+webmain = Blueprint('webmain', __name__)
 
 @webmain.route('/')
 async def home():

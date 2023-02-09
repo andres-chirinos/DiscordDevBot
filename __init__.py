@@ -4,6 +4,9 @@ from discord.ext import commands
 import asyncio
 from quart import Quart
 
+import logging
+from logging.config import dictConfig
+
 #Variables
 Prefix = os.getenv('PREFIX', '|')
 Port = int(os.getenv('PORT', '80'))
@@ -22,7 +25,8 @@ class MyBot(commands.Bot):
             'cogs.voice.voice',
             'cogs.webhook',
             'cogs.thread',
-            'cogs.register.register',
+            'cogs.goverment.goverment',
+            'cogs.goverment.register',
             'cogs.message',
             'cogs.minecraft',
         ]
@@ -38,18 +42,15 @@ class MyBot(commands.Bot):
 
     async def on_ready(self):
         await bot.change_presence(status = discord.Status.do_not_disturb, activity = discord.Game(f'[{Prefix}] {Description}'))
-        print(f'{self.user} is online') 
 
     async def on_command_error(self, context, exception):
-        print(f"[Error] {context.message.author} {exception}")
         await context.send(f'{exception}')
 
     async def on_error(self, event_method):
-        print(f"[Error] {event_method}")
         return await super().on_error(event_method)
 
 #setup website
-app = Quart(__name__)
+app = Quart(__name__, root_path='pages')
 
 from pages.webmain import webmain
 app.register_blueprint(webmain, url_prefix = '/')
@@ -60,24 +61,27 @@ bot = MyBot(command_prefix = commands.when_mentioned_or(Prefix), help_command = 
 @app.before_serving
 async def before_serving():
     loop = asyncio.get_event_loop()
-    await bot.login(Token) #bot.run(token = Token)
+    await bot.login(Token) 
     loop.create_task(bot.connect(), name = 'Bot refresh')
-
-#log control
-from logging.config import dictConfig
-
-dictConfig({
-    'version': 1,
-    'loggers': {
-        'quart.app': {
-            'level': 'ERROR',
-            'level': 'INFO',
-        },
-    },
-})
 
 #Startup
 if __name__ == '__main__':
-    #app.run(debug = True)#, port = Port)
+    #logFormatter = logging.Formatter(fmt=' %(name)-8s - %(levelname)-8s - %(message)s')
+    #discord.utils.setup_logging(level = logging.INFO, formatter = logFormatter)
+    dictConfig({
+        'version': 1,
+        'loggers': {
+            'quart.app': {
+                'level': 'INFO',
+                'formatter' : ' %(name)-8s - %(levelname)-8s - %(message)s',
+            },
+            'discord':{
+                'level': 'INFO',
+                'formatter' : ' %(name)-8s - %(levelname)-8s - %(message)s',
+            }
+        },
+    })
+    
+    #app.run(debug=True)
     app.run(host = '0.0.0.0', port = Port)
 

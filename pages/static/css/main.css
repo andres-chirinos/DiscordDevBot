@@ -1,45 +1,42 @@
-html,
-body {
-    width: 100%;
-    height: 100%;
+* {
     margin: 0;
     padding: 0;
+    height: 100%;
 }
 
-#map {
+body {
+    background: #272727;
+}
+
+section {
     height: 94%;
-    width: 100%;
-    image-rendering: pixelated;
 }
 
-.mouseposition {
-    background-color: white;
-    padding: 3px;
-    text-align: right;
+.map{
+    width: 75%;
 }
 
-.mousepositioncoord {
-    min-width: 40px;
-    display: inline-block;
-}
-
-div.ol-mouse-position {
-    background-color: #272727;
-    color: #999999;
-    padding: 6px;
-    border-radius: 3px;
-    box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.2);
+.widget{
+    width: 24%;
 }
 
 footer {
     background: #272727;
-    height: 2%;
-    padding: 1%;
-    font-size: 10px;
+    padding: 1em;
+    height: max-content;
+    width: max-content;
+
+    font-size: 70%;
     color: #999999;
     font-style: italic;
 }
 
-a {
+footer img{
+    height: 1em;
+    width: auto;
+}
+
+footer a {
+    text-decoration: none;
     color: #c5c5c5;
 }

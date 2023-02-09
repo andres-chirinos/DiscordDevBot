@@ -5,8 +5,7 @@ from discord.ext import commands, tasks
 from discord.utils import get
 
 from __init__ import ServerId
-from cogs.register.views import Vote_view, Mission_view
-from cogs.register.modals import MyModal
+from cogs.goverment.views import Vote_view
 import datetime
 
 class Register(commands.GroupCog, name = 'register'):
@@ -82,28 +81,7 @@ class Register(commands.GroupCog, name = 'register'):
             return await interaction.response.send_message(content = '🟢', ephemeral = True)
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
-    
-    #Para poner el solicitar una mision
-    @app_commands.command(name = 'mision', description = 'create a mision')
-    async def createmision(self, interaction: discord.Interaction): 
-        try: 
-            await interaction.channel.send(content = 'Para solicitar una misión diplomatica', view = Mission_view())
-
-            return await interaction.response.send_message(content = '🟢', ephemeral = True)
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
-
-    #Para poner el solicitar una mision
-    @app_commands.command(name = 'modal', description = 'modal')
-    async def modal(self, interaction: discord.Interaction): 
-        try: 
-            await interaction.response.send_modal(MyModal())
-
-            return await interaction.response.send_message(content = '🟢', ephemeral = True)
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
 async def setup(bot: commands.Bot):
     bot.add_view(Vote_view())
-    bot.add_view(Mission_view())
     await bot.add_cog(Register(bot), guild = discord.Object(id = ServerId))        

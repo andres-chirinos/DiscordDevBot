@@ -4,6 +4,21 @@ from discord import app_commands
 from discord.ext import commands
 from __init__ import ServerId
 
+class Vote_view(discord.ui.View):
+    def __init__(self) -> None:
+        self.datavotes = dict()
+        super().__init__(timeout = None)
+    
+    @discord.ui.button(label = "Registrar", style = discord.ButtonStyle.grey, custom_id = 'stopvote')
+    async def button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        try:
+            if interaction.user.get_role(1020129264726712371) is not None:
+                await interaction.channel.send(content = f'{self.datavotes.values()}')
+                return await interaction.response.send_message(content = '🟢', ephemeral = True)
+            await interaction.response.send_message(content = '🔴', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+
 class Message(commands.GroupCog, name = 'message'):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -20,7 +35,7 @@ class Message(commands.GroupCog, name = 'message'):
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
-    #Edit thread
+    #Edit message
     @app_commands.command(name = 'edit', description = 'Edit a message')
     @app_commands.describe(text = 'Text to edit')
     async def edit(self, interaction: discord.Interaction, messageid:str, text:str = None):
@@ -41,8 +56,6 @@ class Message(commands.GroupCog, name = 'message'):
             return await interaction.response.send_message(content = f'🟢',ephemeral = True)
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
-
-
 
 async def setup(bot: commands.Bot):       
     await bot.add_cog(Message(bot), guild = discord.Object(id = ServerId))       
