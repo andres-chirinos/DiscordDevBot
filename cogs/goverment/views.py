@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
-    
+
+from cogs.goverment.modals import Register_modal
+
 class Vote_view(discord.ui.View):
     def __init__(self) -> None:
         self.datavotes = dict()
@@ -35,3 +37,14 @@ class Vote_view(discord.ui.View):
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
         
+
+class Register_view(discord.ui.View):
+    def __init__(self) -> None:
+        super().__init__(timeout = None)
+
+    @discord.ui.button(label = "Registrarse", style = discord.ButtonStyle.red, custom_id = 'register_user')
+    async def button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        try:
+            await interaction.response.send_modal(Register_modal())
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
