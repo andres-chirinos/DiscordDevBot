@@ -22,6 +22,7 @@ class Thread(commands.GroupCog, name = 'thread'):
     async def createthread(self, interaction: discord.Interaction, name: str, archive_in_minutes: int = None, private: bool = False, channel_id: str = None):
         try:
             if private is True: private = discord.ChannelType.private_thread
+            else: private = discord.ChannelType.public_thread
             if channel_id == None: channel_id = interaction.channel.id
             Channel = interaction.guild.get_channel(int(channel_id))
             thread = await Channel.create_thread(name = name, type = private, auto_archive_duration = archive_in_minutes, invitable = False)

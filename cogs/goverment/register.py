@@ -14,7 +14,7 @@ class Register(commands.GroupCog, name = 'register'):
 
         #self.permitmessageid = 1074360119896330330
         #self.emojicheck = '🔴'
-
+        self.foreignroleid = 1038518544012431390
         self.inviteroleid = 1058390264588292199
 
         self.grantinvite.start()
