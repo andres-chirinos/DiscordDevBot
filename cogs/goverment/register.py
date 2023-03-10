@@ -50,7 +50,7 @@ class Register(commands.GroupCog, name = 'register'):
     @grantinvite.before_loop
     async def before_printer(self):
         await self.bot.wait_until_ready()
-
+        
     #Para registrarse
     @app_commands.command(name = 'registerbutton', description = 'create a register button')
     async def registerbutton(self, interaction: discord.Interaction): 

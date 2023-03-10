@@ -10,8 +10,8 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-        self.serverchannelid = 1048249292122501141
-        self.servermessageid = 1049759166132133969
+        self.serverchannelid = 1068569241730691272
+        self.servermessageid = 1083562216730665071
 
         self.getserverstatus.start()
 

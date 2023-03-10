@@ -47,7 +47,6 @@ class Message(commands.GroupCog, name = 'message'):
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
-
     @app_commands.command(name = 'purge', description = 'Purge a messages')
     @app_commands.describe(limit = 'Amount of messages want to purge')
     async def purge(self, interaction: discord.Interaction, limit: int = None):

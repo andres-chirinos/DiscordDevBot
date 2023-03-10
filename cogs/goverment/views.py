@@ -6,6 +6,7 @@ from cogs.goverment.modals import Register_modal
 class Vote_view(discord.ui.View):
     def __init__(self) -> None:
         self.datavotes = dict()
+        self.ciudadanoid = 1038518797021216809
         super().__init__(timeout = None)
     
     @discord.ui.select(
@@ -13,14 +14,15 @@ class Vote_view(discord.ui.View):
         placeholder = 'Vote!',
         row = 2,
         options = [
-            discord.SelectOption(label = 'Aye', value = 'Aye', emoji = '✔'),
-            discord.SelectOption(label = 'Nay', value = 'Nay', emoji = '✖'),
-            discord.SelectOption(label = 'Abs', value = 'Abs', emoji = '➖'),
+            discord.SelectOption(label = 'Si', value = 'Aye', emoji = '✔'),
+            discord.SelectOption(label = 'No', value = 'Nay', emoji = '✖'),
+            discord.SelectOption(label = 'Nulo', value = 'Abs', emoji = '➖'),
         ],
     )
     async def select(self, interaction: discord.Interaction, select: discord.ui.Select):
         try:
-            if interaction.user.get_role(1038518797021216809) is not None:
+            
+            if interaction.user.get_role(self.ciudadanoid) is not None:
                 self.datavotes[interaction.user.id] = select.values
                 return await interaction.response.send_message(content = '🟢', ephemeral = True)
             await interaction.response.send_message(content = '🔴', ephemeral = True)
@@ -31,7 +33,18 @@ class Vote_view(discord.ui.View):
     async def button(self, interaction: discord.Interaction, button: discord.ui.Button):
         try:
             if interaction.user.get_role(1020129264726712371) is not None:
-                await interaction.channel.send(content = f'{self.datavotes.values()}')
+
+                ciudadano = interaction.user.get_role(self.ciudadanoid)
+
+                voteslist = list()
+                for i in self.datavotes.values():
+                    voteslist.append(i[0])
+
+                aye = voteslist.count('Aye')
+                nay = voteslist.count('Nay')
+                abs = len(ciudadano.members)- aye - nay
+
+                await interaction.channel.send(content = f'{aye} {nay} {abs} {voteslist}')
                 return await interaction.response.send_message(content = '🟢', ephemeral = True)
             await interaction.response.send_message(content = '🔴', ephemeral = True)
         except Exception as expt:
