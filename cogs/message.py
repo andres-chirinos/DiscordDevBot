@@ -4,21 +4,6 @@ from discord import app_commands
 from discord.ext import commands
 from __init__ import ServerId
 
-class Vote_view(discord.ui.View):
-    def __init__(self) -> None:
-        self.datavotes = dict()
-        super().__init__(timeout = None)
-    
-    @discord.ui.button(label = "Registrar", style = discord.ButtonStyle.grey, custom_id = 'stopvote')
-    async def button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        try:
-            if interaction.user.get_role(1020129264726712371) is not None:
-                await interaction.channel.send(content = f'{self.datavotes.values()}')
-                return await interaction.response.send_message(content = '🟢', ephemeral = True)
-            await interaction.response.send_message(content = '🔴', ephemeral = True)
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
-
 class Message(commands.GroupCog, name = 'message'):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -26,8 +11,8 @@ class Message(commands.GroupCog, name = 'message'):
 
     ##Message
     #Send thread
-    @app_commands.command(name = 'send', description = 'Send a message')
-    @app_commands.describe(text = 'Text to send')
+    @app_commands.command(name = 'send', description = 'Enviar un mensaje')
+    @app_commands.describe(text = 'Contenido')
     async def send(self, interaction: discord.Interaction, text:str):
         try:
             await interaction.channel.send(content=text)
@@ -36,19 +21,19 @@ class Message(commands.GroupCog, name = 'message'):
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
     #Edit message
-    @app_commands.command(name = 'edit', description = 'Edit a message')
-    @app_commands.describe(text = 'Text to edit')
-    async def edit(self, interaction: discord.Interaction, messageid:str, text:str = None):
+    @app_commands.command(name = 'edit', description = 'Editar un mensaje')
+    @app_commands.describe(messageid = 'Id del mensaje', content = 'Nuevo contenido')
+    async def edit(self, interaction: discord.Interaction, messageid:str, content:str = None):
         try:
             message = await interaction.channel.fetch_message(int(messageid))
-            if text is None: text = message.content
-            await message.edit(content = text)
+            if content is None: content = message.content
+            await message.edit(content = content)
             return await interaction.response.send_message(content = '🟢',ephemeral = True)
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
-    @app_commands.command(name = 'purge', description = 'Purge a messages')
-    @app_commands.describe(limit = 'Amount of messages want to purge')
+    @app_commands.command(name = 'purge', description = 'Eliminar mensajes')
+    @app_commands.describe(limit = '¿Cuentos mensajes?')
     async def purge(self, interaction: discord.Interaction, limit: int = None):
         try:
             await interaction.channel.purge(limit=limit)

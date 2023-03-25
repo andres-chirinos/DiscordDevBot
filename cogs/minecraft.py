@@ -17,7 +17,7 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
 
         super().__init__()
 
-    def get_server_info(self, ip:str = "mc.tricraft.gq"):
+    def get_server_info(self, ip:str = "play.ancientnetwork.tk"):
         with urllib.request.urlopen("https://api.mcsrvstat.us/2/" + ip) as url:
             requestdata = json.load(url)
             if requestdata['online'] == True:
@@ -26,8 +26,8 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
                 data = f"{requestdata['hostname']} is offline"
             return f"{data}, updated in <t:{round(datetime.datetime.now().timestamp())}>"
 
-    @app_commands.command(name = 'serverstatus', description = 'Get a Minecraft server status')
-    @app_commands.describe(ip = 'IP of server')
+    @app_commands.command(name = 'status', description = 'Obtener el estatus de un server de minecraft')
+    @app_commands.describe(ip = 'Ip del servidor')
     async def send(self, interaction: discord.Interaction, ip:str):
         try:
             await interaction.response.send_message(content = f'🟢 {self.get_server_info(ip)}',ephemeral = True)

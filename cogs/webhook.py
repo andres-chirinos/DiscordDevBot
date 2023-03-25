@@ -12,8 +12,8 @@ class Webhook(commands.GroupCog, name = 'webhook'):
 
     ##Webhook Handling
     #Create webhook
-    @app_commands.command(name = 'create', description = 'Create a webhook')
-    @app_commands.describe(name = 'Name of webhook integration')
+    @app_commands.command(name = 'create', description = 'Crear una webhook')
+    @app_commands.describe(name = 'Nombre')
     async def create(self, interaction: discord.Interaction, name: str):
         try:
             webhook = await interaction.channel.create_webhook(name = name, avatar = None, reason = None)
@@ -27,8 +27,8 @@ class Webhook(commands.GroupCog, name = 'webhook'):
         return [app_commands.Choice(name = webhook.name, value = str(webhook.id)) for webhook in webhooks]
 
     #See webhook info
-    @app_commands.command(name = 'info', description = 'Webhook info')
-    @app_commands.describe(webhookid = 'Name of webhook')
+    @app_commands.command(name = 'info', description = 'Información de una webhook')
+    @app_commands.describe(webhookid = 'Nombre')
     @app_commands.autocomplete(webhookid = webhook_autocomplete)
     async def info(self, interaction: discord.Interaction, webhookid: str):
         try:  
@@ -40,8 +40,8 @@ class Webhook(commands.GroupCog, name = 'webhook'):
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
     #Delete webhook 
-    @app_commands.command(name = 'delete', description = 'Delete webhook')
-    @app_commands.describe(webhookid = 'Name of webhook')
+    @app_commands.command(name = 'delete', description = 'Eliminar una webhook')
+    @app_commands.describe(webhookid = 'Nombre')
     @app_commands.autocomplete(webhookid = webhook_autocomplete)
     async def delete(self, interaction: discord.Interaction, webhookid: str):
         try:

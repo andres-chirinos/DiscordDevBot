@@ -13,10 +13,14 @@ class Voice(commands.GroupCog, name = 'voice'):
 
         super().__init__()
 
+    ##Create Voice
+    #Create a voice channel on join in
+
+
     ##Voice Handling
     #Join a voice channel
-    @app_commands.command(name = 'join', description = 'Join a voice channel')
-    @app_commands.describe(channel = 'Channel to join')
+    @app_commands.command(name = 'join', description = 'Unirse a un canal')
+    @app_commands.describe(channel = '¿Cual canal?')
     async def join(self, interaction: discord.Interaction, channel: discord.VoiceChannel = None):
         try:
             if self.voiceclient is None and (channel is not None or interaction.user.voice is not None):
@@ -28,7 +32,7 @@ class Voice(commands.GroupCog, name = 'voice'):
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
     #Leave a voice channel
-    @app_commands.command(name = 'leave', description = 'Leave a voice channel')
+    @app_commands.command(name = 'leave', description = 'Salir del canal')
     async def leave(self, interaction: discord.Interaction):
         try:
             if self.voiceclient is not None:
@@ -39,8 +43,8 @@ class Voice(commands.GroupCog, name = 'voice'):
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
     #Text to speech command
-    @app_commands.command(name = 'gtts', description = 'Text to speech in a voice channel')
-    @app_commands.describe(text = 'Text to be converted to voice', language = 'Language of text (langcode from google docs)', slow = 'Play more slow the text voice')
+    @app_commands.command(name = 'gtts', description = 'Escritura a voz')
+    @app_commands.describe(text = '¿Contenido a leer?', language = '¿Idioma (langcode desde google docs)?', slow = '¿Velocidad de lectura?')
     async def gtts(self, interaction: discord.Interaction, text: str, language: str = 'es', slow: bool = False):
         try:
             if self.voiceclient is not None:

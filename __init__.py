@@ -28,7 +28,7 @@ class MyBot(commands.Bot):
             'cogs.goverment.goverment',
             'cogs.goverment.register',
             'cogs.message',
-            'cogs.minecraft',
+            #'cogs.minecraft',
         ]
     
     async def setup_hook(self):

@@ -56,7 +56,7 @@ class Goverment(commands.GroupCog, name = 'goverment'):
         super().__init__()
 
     #Poner boton para solicitar una misión
-    @app_commands.command(name = 'meeting', description = 'set a request meeting message')
+    @app_commands.command(name = 'meeting', description = 'Boton para poder pedir una reunión')
     async def meeting(self, interaction: discord.Interaction): 
         try: 
             await interaction.channel.send(content = 'Para solicitar una reunión', view = Meeting_view())
