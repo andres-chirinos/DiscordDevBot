@@ -16,7 +16,7 @@ class Register_modal(discord.ui.Modal):
 
     async def on_submit(self, interaction: discord.Interaction):
         try:
-            if len(interaction.user.roles)<=0:
+            if len(interaction.user.roles)==1:
                 role = interaction.user.guild.get_role(self.foreignroleid)
                 await interaction.user.edit(nick = str(self.nick), roles = [role], reason = 'Registro')
             else:
@@ -45,8 +45,22 @@ class Register(commands.GroupCog, name = 'register'):
         self.inviteroleid = 1058390264588292199
 
         super().__init__()
-        
+    
     #Para registrarse
+    @app_commands.command(name = 'user', description = 'Registro manual')
+    async def register(self, interaction: discord.Interaction, user: discord.Member, nick:str): 
+        try:
+            if len(user.roles)==1:
+                role = user.guild.get_role(self.foreignroleid)
+                await user.edit(nick = nick, roles = [role], reason = 'Registro')
+            else:
+                await user.edit(nick = nick, reason = 'Actualización')
+
+            return await interaction.response.send_message(content = '🟢', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+
+    #Para poner boton de registro
     @app_commands.command(name = 'set', description = 'Poner boton de registro')
     async def registerbutton(self, interaction: discord.Interaction): 
         try:
