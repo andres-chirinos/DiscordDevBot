@@ -4,6 +4,24 @@ from discord.ext import commands
 
 from __init__ import ServerId
 
+class Meeting_modal(discord.ui.Modal):
+    def __init__(self) -> None:
+        super().__init__(title = 'Solicitud a reunión', custom_id = 'meeting_modal', timeout = None)
+        self.reason = discord.ui.TextInput(label = 'Pais', min_length = 3, max_length = 20, required = False)
+        self.add_item(self.reason)
+
+    async def on_submit(self, interaction: discord.Interaction):
+        try:
+            if interaction.user.nick is None: reason = interaction.user.name
+            else: reason = interaction.user.nick
+            thread = await interaction.channel.create_thread(name = f'{reason}', type = discord.ChannelType.private_thread, invitable = False)
+            await thread.add_user(interaction.user)
+            #await thread.send(content = f'Bienvenido {interaction.user.mention}, presentese por favor.')
+            return await interaction.response.send_message(content = '🟢', ephemeral = True, delete_after = 10)
+
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True, delete_after = 30)
+
 class Meeting_view(discord.ui.View):
     def __init__(self) -> None:
         super().__init__(timeout = None)
@@ -19,33 +37,16 @@ class Meeting_view(discord.ui.View):
             retry = bucket.update_rate_limit()
             if not retry:
 
-                if interaction.user.nick is None: reason = interaction.user.name
+                await interaction.response.send_modal(Meeting_modal())
+                """if interaction.user.nick is None: reason = interaction.user.name
                 else: reason = interaction.user.nick
                 thread = await interaction.channel.create_thread(name = f'{reason}', type = discord.ChannelType.private_thread, invitable = False)
                 await thread.send(content = f'Bienvenido {interaction.user.mention}, presentese por favor.')
-                return await interaction.response.send_message(content = '🟢', ephemeral = True, delete_after = 10)
+                return await interaction.response.send_message(content = '🟢', ephemeral = True, delete_after = 10)"""
 
             await interaction.response.send_message(content = f'🔴 Please wait {round(retry)}s.', ephemeral = True)
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
-
-class Meeting_modal(discord.ui.Modal):
-    def __init__(self) -> None:
-        super().__init__(title = 'Solicitud a reunión', custom_id = 'meeting_modal', timeout = None)
-        self.reason = discord.ui.TextInput(label = 'Pais u Organización', placeholder = 'ONU / Groenlandia * si no tiene dejar en blanco', min_length = 3, max_length = 20, required = False)
-        self.add_item(self.reason)
-
-    async def on_submit(self, interaction: discord.Interaction):
-        try:
-            if interaction.user.nick is None: reason = interaction.user.name
-            else: reason = interaction.user.nick
-            thread = await interaction.channel.create_thread(name = f'{reason}', type = discord.ChannelType.private_thread, invitable = False)
-            #await thread.add_user(interaction.user)
-            await thread.send(content = f'Bienvenido {interaction.user.mention}, presentese por favor.')
-            return await interaction.response.send_message(content = '🟢', ephemeral = True, delete_after = 10)
-
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True, delete_after = 30)
 
 class Goverment(commands.GroupCog, name = 'goverment'):
     def __init__(self, bot: commands.Bot):
