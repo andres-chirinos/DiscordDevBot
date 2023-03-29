@@ -19,12 +19,13 @@ async def passport(interaction: discord.Interaction, user: discord.Member, nick:
     format = '%Y-%m-%d'
     Textpass.text((145, 120), f'{datetime.utcnow().strftime(format)}', font=Fonta, fill =(81, 111, 22))
     Textpass.text((40, 370), f'{nick}', font=FontA, fill =(0, 0, 0))
-    Textpass.text((290, 420), f'{interaction.user.created_at.strftime(format)}', font=Fonta, fill =(0, 0, 0))
+    Textpass.text((290, 420), f'{user.created_at.strftime(format)}', font=Fonta, fill =(0, 0, 0))
     Textpass.text((290, 450), f'{gender}', font=Fonta, fill =(0, 0, 0))
     Textpass.text((290, 490), f'{place}', font=Fonta, fill =(0, 0, 0))
-    Textpass.text((290, 520), f'{interaction.user.joined_at.strftime(format)}', font=Fonta, fill =(0, 0, 0))
+    Textpass.text((290, 520), f'{user.joined_at.strftime(format)}', font=Fonta, fill =(0, 0, 0))
     Textpass.text((280, 580), f'{interaction.guild.name}', font=FontA, fill =(0, 0, 0))
-    Textpass.text((35, 635), f'{interaction.user.id}', font=Fonta, fill =(0, 0, 0))
+    Textpass.text((35, 635), f'{user.id}', font=Fonta, fill =(0, 0, 0))
 
     passport.save('cogs/register/register.png')
     return discord.File('cogs/register/register.png')
+
