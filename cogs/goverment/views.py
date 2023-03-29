@@ -1,8 +1,6 @@
 import discord
 from discord.ext import commands
 
-from cogs.goverment.modals import Register_modal
-
 class Vote_view(discord.ui.View):
     def __init__(self) -> None:
         self.datavotes = dict()

@@ -26,7 +26,7 @@ class MyBot(commands.Bot):
             'cogs.webhook',
             'cogs.thread',
             'cogs.goverment.goverment',
-            'cogs.goverment.register',
+            'cogs.register.register',
             'cogs.message',
             #'cogs.minecraft',
         ]
