@@ -1,10 +1,10 @@
-import os
-import discord
+from __init__ import guild_id, Cache
+
+import discord, os
 from discord import app_commands
 from discord.ext import commands, tasks
 from discord.utils import get
 
-from __init__ import ServerId
 from cogs.goverment.views import Vote_view, Register_view
 import datetime
 
@@ -14,8 +14,6 @@ class Register(commands.GroupCog, name = 'register'):
 
         #self.permitmessageid = 1074360119896330330
         #self.emojicheck = '🔴'
-        self.foreignroleid = 1038518544012431390
-        self.inviteroleid = 1058390264588292199
 
         self.grantinvite.start()
 
@@ -26,7 +24,7 @@ class Register(commands.GroupCog, name = 'register'):
     async def on_raw_reaction_add(self, payload):
         member = get(self.bot.get_all_members(), id = payload.user_id)
         if member and member.id != self.bot.application_id and payload.message_id == self.permitmessageid and payload.emoji.name == self.emojicheck:
-            role = member.guild.get_role(self.foreignroleid)
+            role = member.guild.get_role(int(Cache.hget('roles', 'foreign_id')))
             role.mention
             await member.edit(roles=[role])
     
@@ -43,8 +41,8 @@ class Register(commands.GroupCog, name = 'register'):
         members = self.bot.guilds[0].members
         now = datetime.datetime.now()
         for member in members:
-            if member is not self.bot and member.get_role(self.foreignroleid) is not None and int(member.joined_at.timestamp()) + 604800 <= int(now.timestamp()):
-                role = member.guild.get_role(self.inviteroleid)
+            if member is not self.bot and member.get_role(int(Cache.hget('roles', 'foreign_id'))) is not None and int(member.joined_at.timestamp()) + 604800 <= int(now.timestamp()):
+                role = member.guild.get_role(int(Cache.hget('roles', 'invite_id')))
                 await member.add_roles(role)
 
     @grantinvite.before_loop
@@ -73,4 +71,4 @@ class Register(commands.GroupCog, name = 'register'):
 
 async def setup(bot: commands.Bot):
     bot.add_view(Vote_view())
-    await bot.add_cog(Register(bot), guild = discord.Object(id = ServerId))        
+    await bot.add_cog(Register(bot), guild = discord.Object(id = guild_id))        

@@ -1,8 +1,8 @@
+from __init__ import guild_id, Cache
+
 import discord
 from discord import app_commands
 from discord.ext import commands
-
-from __init__ import ServerId
 
 class Meeting_modal(discord.ui.Modal):
     def __init__(self) -> None:
@@ -51,9 +51,6 @@ class Meeting_view(discord.ui.View):
 class Goverment(commands.GroupCog, name = 'goverment'):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-
-        self.assemblyforumid = 1035706603741138964
-
         super().__init__()
 
     #Poner boton para solicitar una misión
@@ -69,9 +66,9 @@ class Goverment(commands.GroupCog, name = 'goverment'):
     #Mencionar al hacer una propuesta
     @commands.Cog.listener()
     async def on_thread_create(self, thread):
-        if thread.parent_id == self.assemblyforumid:
-            await thread.send(content = f'🟢 <@&1055590689666252850>')
+        if thread.parent_id == int(Cache.hget('channels', 'parlamentforum_id')):
+            await thread.send(content = f"🟢 <@&{int(Cache.hget('roles', 'ciudadano_id'))}>")
 
 async def setup(bot: commands.Bot):
     bot.add_view(Meeting_view())
-    await bot.add_cog(Goverment(bot), guild = discord.Object(id = ServerId))        
+    await bot.add_cog(Goverment(bot), guild = discord.Object(id = guild_id))        

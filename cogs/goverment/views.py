@@ -1,10 +1,11 @@
+from __init__ import guild_id, Cache
+
 import discord
 from discord.ext import commands
 
 class Vote_view(discord.ui.View):
     def __init__(self) -> None:
         self.datavotes = dict()
-        self.ciudadanoid = 1038518797021216809
         super().__init__(timeout = None)
     
     @discord.ui.select(
@@ -20,7 +21,7 @@ class Vote_view(discord.ui.View):
     async def select(self, interaction: discord.Interaction, select: discord.ui.Select):
         try:
             
-            if interaction.user.get_role(self.ciudadanoid) is not None:
+            if interaction.user.get_role(int(Cache.hget('roles', 'ciudadano_id'))) is not None:
                 self.datavotes[interaction.user.id] = select.values
                 return await interaction.response.send_message(content = '🟢', ephemeral = True)
             await interaction.response.send_message(content = '🔴', ephemeral = True)
@@ -32,7 +33,7 @@ class Vote_view(discord.ui.View):
         try:
             if interaction.user.get_role(1020129264726712371) is not None:
 
-                ciudadano = interaction.user.get_role(self.ciudadanoid)
+                ciudadano = interaction.user.get_role(int(Cache.hget('roles', 'ciudadano_id')))
 
                 voteslist = list()
                 for i in self.datavotes.values():

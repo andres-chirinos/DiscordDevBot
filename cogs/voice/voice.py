@@ -2,7 +2,7 @@ import os
 import discord
 from discord import app_commands
 from discord.ext import commands
-from __init__ import ServerId
+from __init__ import guild_id, Cache
 
 from gtts import gTTS
 
@@ -63,4 +63,4 @@ class Voice(commands.GroupCog, name = 'voice'):
             self.voiceclient.play(source = discord.FFmpegPCMAudio(source = 'cogs/voice/voice.mp3'))
 
 async def setup(bot: commands.Bot):   
-    await bot.add_cog(Voice(bot), guild = discord.Object(id = ServerId))        
+    await bot.add_cog(Voice(bot), guild = discord.Object(id = guild_id))        

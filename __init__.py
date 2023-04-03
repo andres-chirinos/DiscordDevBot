@@ -1,4 +1,5 @@
 import os
+import redis
 import discord
 from discord.ext import commands
 import asyncio
@@ -8,12 +9,11 @@ import logging
 from logging.config import dictConfig
 
 #Variables
-Prefix = os.getenv('PREFIX', '|')
-Port = int(os.getenv('PORT', '80'))
-ApplicationId = int(os.getenv('APPID', '1031315927679123637'))
-ServerId = int(os.getenv('SERVERGUILD', '1018676558652776558'))
-Token = os.getenv('TOKEN', 'MTAzMTMxNTkyNzY3OTEyMzYzNw.GEEof1.zynT3R5CcMLm7hI08fW9D_9KKyOOU3Qg_uVnko')
-Description = os.getenv('DESC', 'Prueba controlada sin variable')
+Cache = redis.Redis(host=os.getenv('REDISHOST', 'containers-us-west-192.railway.app'), port=int(os.getenv('REDISPORT', 7660)), password=os.getenv('REDISPASSWORD', 'ouBdBv91Z7t60rEfd0VL'))
+guild_id = int(Cache.hget('appdata', 'guild_id'))
+
+Token = str(os.getenv('TOKEN', 'MTAzMTMxNTkyNzY3OTEyMzYzNw.GEEof1.zynT3R5CcMLm7hI08fW9D_9KKyOOU3Qg_uVnko'))
+Port = int(os.getenv('PORT', '5000'))
 
 #Setting a bot 
 class MyBot(commands.Bot):
@@ -28,20 +28,20 @@ class MyBot(commands.Bot):
             'cogs.goverment.goverment',
             'cogs.register.register',
             'cogs.message',
-            #'cogs.minecraft',
+            'cogs.minecraft',
         ]
     
     async def setup_hook(self):
         for ext in self.initial_extensions:
             await self.load_extension(ext)
 
-        await bot.tree.sync(guild = discord.Object(id = ServerId)) 
+        await bot.tree.sync(guild = discord.Object(id = guild_id)) 
 
     async def close(self):
         await super().close()
 
     async def on_ready(self):
-        await bot.change_presence(status = discord.Status.do_not_disturb, activity = discord.Game(f'[{Prefix}] {Description}'))
+        await bot.change_presence(status = discord.Status.do_not_disturb, activity = discord.Game(f"[{str(Cache.hget('appdata', 'prefix'))}] {str(Cache.hget('appdata', 'desc'))}"))
 
     async def on_command_error(self, context, exception):
         await context.send(f'{exception}')
@@ -55,7 +55,7 @@ app = Quart(__name__, root_path='pages')
 from pages.webmain import webmain
 app.register_blueprint(webmain, url_prefix = '/')
 
-bot = MyBot(command_prefix = commands.when_mentioned_or(Prefix), help_command = None, case_insensitive = True, description = Description, intents = discord.Intents.all(), aplicaction_id = ApplicationId)
+bot = MyBot(command_prefix = commands.when_mentioned_or(str(Cache.hget('appdata', 'prefix'))), help_command = None, case_insensitive = True, description = str(Cache.hget('appdata', 'desc')), intents = discord.Intents.all(), aplicaction_id = int(Cache.hget('appdata', 'app_id')))
 
 #website start bot and periodic reflesh it
 @app.before_serving
