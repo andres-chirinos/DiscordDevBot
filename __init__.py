@@ -9,7 +9,7 @@ import logging
 from logging.config import dictConfig
 
 #Variables
-Cache = redis.Redis(host=os.getenv('REDISHOST', 'containers-us-west-192.railway.app'), port=int(os.getenv('REDISPORT', 7660)), password=os.getenv('REDISPASSWORD', 'ouBdBv91Z7t60rEfd0VL'))
+Cache = redis.Redis(host=os.getenv('REDISHOST', 'containers-us-west-192.railway.app'), port=int(os.getenv('REDISPORT', 7660)), password=os.getenv('REDISPASSWORD', 'ouBdBv91Z7t60rEfd0VL'), decode_responses=True)
 guild_id = int(Cache.hget('appdata', 'guild_id'))
 
 Token = str(os.getenv('TOKEN', 'MTAzMTMxNTkyNzY3OTEyMzYzNw.GEEof1.zynT3R5CcMLm7hI08fW9D_9KKyOOU3Qg_uVnko'))
@@ -41,7 +41,7 @@ class MyBot(commands.Bot):
         await super().close()
 
     async def on_ready(self):
-        await bot.change_presence(status = discord.Status.do_not_disturb, activity = discord.Game(f"[{str(Cache.hget('appdata', 'prefix'))}] {str(Cache.hget('appdata', 'desc'))}"))
+        await bot.change_presence(status = discord.Status.do_not_disturb, activity = discord.Game(f"""[{str(Cache.hget('appdata', 'prefix'))}] {str(Cache.hget('appdata', 'desc'))}"""))
 
     async def on_command_error(self, context, exception):
         await context.send(f'{exception}')
@@ -82,6 +82,6 @@ if __name__ == '__main__':
         },
     })
     
-    #app.run(debug=True)
-    app.run(host = '0.0.0.0', port = Port)
+    app.run(debug=True)
+    #app.run(host = '0.0.0.0', port = Port)
 

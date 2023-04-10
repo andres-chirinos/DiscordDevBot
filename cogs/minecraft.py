@@ -35,7 +35,7 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
     async def getserverstatus(self): 
         link = str(Cache.hget('messages', 'minecraft_status')).split('/')
         channel = self.bot.get_channel(int(link[-2]))
-        message = await channel.fetch_message(int(link[-1]))
+        message = await channel.fetch_message(int(link[-1][:-1]))
         await message.edit(content = self.get_server_info())
         
     @getserverstatus.before_loop
