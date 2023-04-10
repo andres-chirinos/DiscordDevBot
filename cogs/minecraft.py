@@ -13,18 +13,18 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
 
         super().__init__()
 
-    def get_server_info(self, ip:str = "play.ancientnetwork.tk"):
+    def get_server_info(self, ip:str):
         with urllib.request.urlopen("https://api.mcsrvstat.us/2/" + ip) as url:
             requestdata = json.load(url)
             if requestdata['online'] == True:
-                data = f"{requestdata['hostname']} is online {requestdata['players']['online']}/{requestdata['players']['max']}, {requestdata['version']}"
+                data = f"{requestdata['hostname']} de la {requestdata['version']} esta en linea con {requestdata['players']['online']} de {requestdata['players']['max']}, dynmap es {str(Cache.hget('minecraft', 'serverdynmap'))}"
             else:
                 data = f"{requestdata['hostname']} is offline"
-            return f"{data}, updated in <t:{round(datetime.datetime.now().timestamp())}>"
+            return data
 
     @app_commands.command(name = 'status', description = 'Obtener el estatus de un server de minecraft')
     @app_commands.describe(ip = 'Ip del servidor')
-    async def send(self, interaction: discord.Interaction, ip:str):
+    async def send(self, interaction: discord.Interaction, ip:str = Cache.hget('minecraft', 'serverip')):
         try:
             await interaction.response.send_message(content = f'🟢 {self.get_server_info(ip)}',ephemeral = True)
         except Exception as expt:
@@ -36,7 +36,7 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
         link = str(Cache.hget('messages', 'minecraft_status')).split('/')
         channel = self.bot.get_channel(int(link[-2]))
         message = await channel.fetch_message(int(link[-1][:-1]))
-        await message.edit(content = self.get_server_info())
+        await message.edit(content = self.get_server_info(Cache.hget('minecraft', 'serverip')))
         
     @getserverstatus.before_loop
     async def before_printer(self):

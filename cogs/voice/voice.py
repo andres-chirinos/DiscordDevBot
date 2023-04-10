@@ -15,7 +15,10 @@ class Voice(commands.GroupCog, name = 'voice'):
 
     ##Create Voice
     #Create a voice channel on join in
-
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        if not before.channel and after.channel:
+            print(f'{member} has joined the vc')
 
     ##Voice Handling
     #Join a voice channel
