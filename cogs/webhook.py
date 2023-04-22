@@ -1,8 +1,7 @@
-import os
 import discord
 from discord import app_commands
 from discord.ext import commands
-from __init__ import guild_id, Cache
+from __init__ import guild_id
 
 class Webhook(commands.GroupCog, name = 'webhook'):
     def __init__(self, bot: commands.Bot):
@@ -50,6 +49,17 @@ class Webhook(commands.GroupCog, name = 'webhook'):
                 if webhook.id == int(webhookid):
                     await webhook.delete()
                     await interaction.response.send_message(content = '🟢', ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+
+    #Purge webhooks
+    @app_commands.command(name = 'purge', description = 'Limpiar webhooks')
+    async def purge(self, interaction: discord.Interaction):
+        try:
+            webhooks = await interaction.channel.webhooks()
+            for webhook in webhooks:
+                await webhook.delete()
+                await interaction.response.send_message(content = '🟢', ephemeral = True)
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 

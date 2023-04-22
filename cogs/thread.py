@@ -1,15 +1,49 @@
-import os
 import discord
 from discord import app_commands
 from discord.ext import commands
 from __init__ import guild_id, Cache
+
+class Open_modal(discord.ui.Modal):
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
+        super().__init__(title = 'Abrir un hilo privado')
+        
+        self.reason = discord.ui.TextInput(label = 'Nombre del hilo', min_length = 3, max_length = 20, required = False)
+        self.add_item(self.reason)
+
+    async def on_submit(self, interaction: discord.Interaction):
+        try:
+            
+            if self.reason is None:
+                if interaction.user.nick is None: self.reason = interaction.user.name
+                else: self.reason = interaction.user.nick
+            thread = await interaction.channel.create_thread(name = f'{self.reason}', type = discord.ChannelType.private_thread, invitable = False)
+            await thread.add_user(interaction.user)
+            return await interaction.response.send_message(content = '🟢', ephemeral = True, delete_after = 10)
+
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True, delete_after = 30)
+
+class Set_view(discord.ui.View):
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
+        super().__init__(timeout = None)
+    
+    @discord.ui.button(label = "Abrir un hilo privado", style = discord.ButtonStyle.red, custom_id = 'thread_button')
+    async def Open(self, interaction: discord.Interaction, button: discord.ui.Button):
+        try:
+            await interaction.response.send_modal(Open_modal(self.bot))
+        
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+
 
 class Thread(commands.GroupCog, name = 'thread'):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         super().__init__()
 
-    ##Thread
+    ##Thread handling
     #Create thread
     @app_commands.command(name = 'create', description = 'Crear un hilo')
     @app_commands.describe(name = 'Nombre', private = '¿Es privado?')
@@ -31,6 +65,16 @@ class Thread(commands.GroupCog, name = 'thread'):
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
+    #Purge threads
+    @app_commands.command(name = 'purge', description = 'Limpiar hilos')
+    async def purge(self, interaction: discord.Interaction):
+        try:
+            for thread in interaction.channel.threads:
+                thread.delete()
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+
+    ##User handling
     #add user thread
     @app_commands.command(name = 'add', description = 'Añadir un usuario')
     @app_commands.describe(user = 'Elija al usuario')
@@ -51,29 +95,18 @@ class Thread(commands.GroupCog, name = 'thread'):
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
-    """#List forums
-    async def forum_autocomplete(self, interaction: discord.Interaction, current: str):
-        forums = interaction.guild.forums
-        return [app_commands.Choice(name = forum.name, value = str(forum.id)) for forum in forums]
-
-    #Create Post
-    @app_commands.command(name = 'createpost', description = 'Create a post')
-    @app_commands.describe(name = 'Name of post', forumid = 'Forum to create post', archive_in_minutes = 'Time for archive')
-    @app_commands.choices(archive_in_minutes=[
-        app_commands.Choice(name="1 hora", value=60),
-        app_commands.Choice(name="1 dia", value=1440),
-        app_commands.Choice(name="3 dias", value=4320),
-        app_commands.Choice(name="1 semana", value=10080),
-        ])
-    @app_commands.autocomplete(forumid = forum_autocomplete)
-    async def createpost(self, interaction: discord.Interaction, name: str, forumid: str, content: str, archive_in_minutes: int = None):
-        try:
-            forum = interaction.guild.get_channel(int(forumid))
-            if archive_in_minutes == None: archive_in_minutes = forum.default_auto_archive_duration
-            post = await forum.create_thread(name = name, auto_archive_duration = archive_in_minutes, content = content, applied_tags=None)
-            return await interaction.response.send_message(content = f'🟢 <#{post.thread.id}>', ephemeral = True)
+    ##Thread views
+    #Set a thread open button
+    @app_commands.command(name = 'set', description = 'Boton para crear hilos')
+    async def set(self, interaction: discord.Interaction): 
+        try: 
+            await interaction.channel.send(view = Set_view(self.bot))
+            message = await interaction.original_response()
+            print(message)
+            return await interaction.response.send_message(content = '🟢', ephemeral = True, delete_after = 10)
         except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)"""
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True, delete_after = 30)
 
-async def setup(bot: commands.Bot):   
+async def setup(bot: commands.Bot): 
+    bot.add_view(Set_view(bot))  
     await bot.add_cog(Thread(bot), guild = discord.Object(id = guild_id))        

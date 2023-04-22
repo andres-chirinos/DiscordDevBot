@@ -17,7 +17,7 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
         with urllib.request.urlopen("https://api.mcsrvstat.us/2/" + ip) as url:
             requestdata = json.load(url)
             if requestdata['online'] == True:
-                data = f"{requestdata['hostname']} de la {requestdata['version']} esta en linea con {requestdata['players']['online']} de {requestdata['players']['max']}, dynmap es {str(Cache.hget('minecraft', 'serverdynmap'))}"
+                data = f"**Ip. {ip}**\nHost. `{requestdata['hostname']}`\nVersión. `{requestdata['version']}`\nJugadores. `{requestdata['players']['online']}` de `{requestdata['players']['max']}`"
             else:
                 data = f"{requestdata['hostname']} is offline"
             return data
@@ -36,11 +36,11 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
         link = str(Cache.hget('messages', 'minecraft_status')).split('/')
         channel = self.bot.get_channel(int(link[-2]))
         message = await channel.fetch_message(int(link[-1]))
-        await message.edit(content = self.get_server_info(Cache.hget('minecraft', 'serverip')))
+        await message.edit(content = f"{self.get_server_info(Cache.hget('minecraft', 'serverip'))}\nDynmap. {Cache.hget('minecraft', 'serverdynmap')}")
         
     @getserverstatus.before_loop
     async def before_printer(self):
         await self.bot.wait_until_ready()
 
 async def setup(bot: commands.Bot):  
-    await bot.add_cog(Minecraft(bot), guild = discord.Object(id = guild_id))        
+    await bot.add_cog(Minecraft(bot), guild = discord.Object(id = guild_id))

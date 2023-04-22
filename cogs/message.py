@@ -10,30 +10,45 @@ class Message(commands.GroupCog, name = 'message'):
         super().__init__()
 
     ##Message
-    #Send thread
+    #Send
     @app_commands.command(name = 'send', description = 'Enviar un mensaje')
-    @app_commands.describe(text = 'Contenido')
-    async def send(self, interaction: discord.Interaction, text:str):
+    @app_commands.describe(content = 'Contenido')
+    async def send(self, interaction: discord.Interaction, content:str):
         try:
-            await interaction.channel.send(content=text)
+            await interaction.channel.send(content=content)
             return await interaction.response.send_message(content = '🟢',ephemeral = True)
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
-    #Edit message
+    #Edit
     @app_commands.command(name = 'edit', description = 'Editar un mensaje')
-    @app_commands.describe(messageid = 'Id del mensaje', content = 'Nuevo contenido')
-    async def edit(self, interaction: discord.Interaction, messageid:str, content:str = None):
+    @app_commands.describe(messagelink = 'Enlace al mensaje', content = 'Nuevo contenido')
+    async def edit(self, interaction: discord.Interaction, messagelink:str, content:str):
         try:
-            message = await interaction.channel.fetch_message(int(messageid))
-            if content is None: content = message.content
-            await message.edit(content = content)
+            link = messagelink.split('/')
+            channel = self.bot.get_channel(int(link[-2]))
+            message = await channel.fetch_message(int(link[-1]))
+            await message.edit(content = content)     
             return await interaction.response.send_message(content = '🟢',ephemeral = True)
         except Exception as expt:
             await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
 
+    #Delete
+    @app_commands.command(name = 'delete', description = 'Eliminar un mensaje')
+    @app_commands.describe(messagelink = 'Enlace al mensaje', delay = 'Tiempo de espera antes de eliminar el mensaje')
+    async def edit(self, interaction: discord.Interaction, messagelink:str, delay:float = None):
+        try:
+            link = messagelink.split('/')
+            channel = self.bot.get_channel(int(link[-2]))
+            message = await channel.fetch_message(int(link[-1]))
+            await message.delete(delay = delay)
+            return await interaction.response.send_message(content = '🟢',ephemeral = True)
+        except Exception as expt:
+            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+
+    #Purge
     @app_commands.command(name = 'purge', description = 'Eliminar mensajes')
-    @app_commands.describe(limit = '¿Cuentos mensajes?')
+    @app_commands.describe(limit = 'Numero de mensajes')
     async def purge(self, interaction: discord.Interaction, limit: int = None):
         try:
             await interaction.channel.purge(limit=limit)
