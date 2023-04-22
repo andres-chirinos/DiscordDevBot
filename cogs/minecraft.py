@@ -25,10 +25,7 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
     @app_commands.command(name = 'status', description = 'Obtener el estatus de un server de minecraft')
     @app_commands.describe(ip = 'Ip del servidor')
     async def send(self, interaction: discord.Interaction, ip:str = Cache.hget('minecraft', 'serverip')):
-        try:
-            await interaction.response.send_message(content = f'🟢 {self.get_server_info(ip)}',ephemeral = True)
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+        await interaction.response.send_message(content = f'🟢 {self.get_server_info(ip)}', ephemeral = True)
 
     #Revisar el estado del server.
     @tasks.loop(minutes=5)

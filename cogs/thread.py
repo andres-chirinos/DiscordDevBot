@@ -5,42 +5,35 @@ from __init__ import guild_id, Cache
 
 class Open_modal(discord.ui.Modal):
     def __init__(self, bot: commands.Bot):
-        self.bot = bot
-        super().__init__(title = 'Abrir un hilo privado')
-        
+        self.bot = bot        
         self.reason = discord.ui.TextInput(label = 'Nombre del hilo', min_length = 3, max_length = 20, required = False)
+
+        super().__init__(title = 'Abrir un hilo privado')
         self.add_item(self.reason)
 
     async def on_submit(self, interaction: discord.Interaction):
-        try:
-            
-            if self.reason is None:
-                if interaction.user.nick is None: self.reason = interaction.user.name
-                else: self.reason = interaction.user.nick
-            thread = await interaction.channel.create_thread(name = f'{self.reason}', type = discord.ChannelType.private_thread, invitable = False)
-            await thread.add_user(interaction.user)
-            return await interaction.response.send_message(content = '🟢', ephemeral = True, delete_after = 10)
-
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True, delete_after = 30)
+        if self.reason is None:
+            if interaction.user.nick is None: self.reason = interaction.user.name
+            else: self.reason = interaction.user.nick
+        thread = await interaction.channel.create_thread(name = f'{self.reason}', type = discord.ChannelType.private_thread, invitable = False)
+        await thread.add_user(interaction.user)
+        return await interaction.response.send_message(content = '🟢', ephemeral = True, delete_after = 10)
 
 class Set_view(discord.ui.View):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        
         super().__init__(timeout = None)
     
     @discord.ui.button(label = "Abrir un hilo privado", style = discord.ButtonStyle.red, custom_id = 'thread_button')
-    async def Open(self, interaction: discord.Interaction, button: discord.ui.Button):
-        try:
-            await interaction.response.send_modal(Open_modal(self.bot))
-        
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+    async def open(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_modal(Open_modal(self.bot))
 
 
 class Thread(commands.GroupCog, name = 'thread'):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        
         super().__init__()
 
     ##Thread handling
@@ -48,64 +41,47 @@ class Thread(commands.GroupCog, name = 'thread'):
     @app_commands.command(name = 'create', description = 'Crear un hilo')
     @app_commands.describe(name = 'Nombre', private = '¿Es privado?')
     async def create(self, interaction: discord.Interaction, name: str, private: bool = False):
-        try:
-            if private is True: private = discord.ChannelType.private_thread
-            else: private = discord.ChannelType.public_thread
-            thread = await interaction.channel.create_thread(name = name, type = private, invitable = False)
-            return await interaction.response.send_message(content = f'🟢 <#{thread.id}>',ephemeral = True)
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+        if private is True: private = discord.ChannelType.private_thread
+        else: private = discord.ChannelType.public_thread
+        thread = await interaction.channel.create_thread(name = name, type = private, invitable = False)
+        return await interaction.response.send_message(content = f'🟢 <#{thread.id}>',ephemeral = True)
 
     #Delete thread
     @app_commands.command(name = 'delete', description = 'Eliminar un hilo')
     async def delete(self, interaction: discord.Interaction):
-        try:
-            await interaction.channel.delete()
-            return await interaction.response.send_message(content = '🟢',ephemeral = True)
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+        await interaction.channel.delete()
+        return await interaction.response.send_message(content = '🟢',ephemeral = True)
 
     #Purge threads
     @app_commands.command(name = 'purge', description = 'Limpiar hilos')
     async def purge(self, interaction: discord.Interaction):
-        try:
-            for thread in interaction.channel.threads:
-                thread.delete()
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+        for thread in interaction.channel.threads:
+            thread.delete()
+        return await interaction.response.send_message(content = '🟢',ephemeral = True)
 
     ##User handling
     #add user thread
     @app_commands.command(name = 'add', description = 'Añadir un usuario')
     @app_commands.describe(user = 'Elija al usuario')
     async def add(self, interaction: discord.Interaction, user: discord.Member):
-        try:
-            await interaction.channel.add_user(user)
-            return await interaction.response.send_message(content = f'🟢 {user.mention}',ephemeral = True)
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
-
+        await interaction.channel.add_user(user)
+        return await interaction.response.send_message(content = f'🟢 {user.mention}',ephemeral = True)
+    
     #remove user thread
     @app_commands.command(name = 'remove', description = 'Quitar un usuario')
     @app_commands.describe(user = 'Elija al usuario')
     async def remove(self, interaction: discord.Interaction, user: discord.Member):
-        try:
-            await interaction.channel.remove_user(user)
-            return await interaction.response.send_message(content = f'🟢 {user.mention}',ephemeral = True)
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True)
+        await interaction.channel.remove_user(user)
+        return await interaction.response.send_message(content = f'🟢 {user.mention}',ephemeral = True)
 
     ##Thread views
     #Set a thread open button
     @app_commands.command(name = 'set', description = 'Boton para crear hilos')
     async def set(self, interaction: discord.Interaction): 
-        try: 
-            await interaction.channel.send(view = Set_view(self.bot))
-            message = await interaction.original_response()
-            print(message)
-            return await interaction.response.send_message(content = '🟢', ephemeral = True, delete_after = 10)
-        except Exception as expt:
-            await interaction.response.send_message(content = f'🟥 {expt}', ephemeral = True, delete_after = 30)
+        await interaction.channel.send(view = Set_view(self.bot))
+        message = await interaction.original_response()
+        print(message)
+        return await interaction.response.send_message(content = '🟢', ephemeral = True, delete_after = 10)
 
 async def setup(bot: commands.Bot): 
     bot.add_view(Set_view(bot))  
