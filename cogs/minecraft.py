@@ -4,7 +4,7 @@ from discord import app_commands
 from discord.ext import commands, tasks
 from __init__ import guild_id, Cache
 
-import urllib.request, json, datetime
+import urllib.request, json
 
 class Minecraft(commands.GroupCog, name = 'minecraft'):
     def __init__(self, bot: commands.Bot):
@@ -16,10 +16,17 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
     def get_server_info(self, ip:str):
         with urllib.request.urlopen("https://api.mcsrvstat.us/2/" + ip) as url:
             requestdata = json.load(url)
+            data = f"**Ip. {ip}**\n"
             if requestdata['online'] == True:
-                data = f"**Ip. {ip}**\nHost. `{requestdata['hostname']}`\nVersión. `{requestdata['version']}`\nJugadores. `{requestdata['players']['online']}` de `{requestdata['players']['max']}`"
+                if requestdata.get('hostname',0):
+                    data = data + f"\n`{requestdata['hostname']}`"
+                if requestdata.get('version',0):
+                    data = data + f"\nVersión. `{requestdata['version']}`"
+                if requestdata.get('players'):# and requestdata['players']['max']:
+                    data = data + f"\nJugadores. `{requestdata['players']['online']}` de `{requestdata['players']['max']}`"
+                data = data + f"\n-> https://mcsrvstat.us/server/{ip}"
             else:
-                data = f"{requestdata['hostname']} is offline"
+                data = data + "Offline"
             return data
 
     @app_commands.command(name = 'status', description = 'Obtener el estatus de un server de minecraft')

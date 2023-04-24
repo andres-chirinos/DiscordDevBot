@@ -15,8 +15,8 @@ class Register_modal(discord.ui.Modal):
         self.add_item(self.nick)
 
     async def on_submit(self, interaction: discord.Interaction):
-        if not interaction.user.get_role(int(Cache.hget('roles', 'foreign_id'))):
-            role = interaction.user.guild.get_role(int(Cache.hget('roles', 'foreign_id')))
+        if not interaction.user.get_role(int(Cache.hget('roles', '@_id'))):
+            role = interaction.user.guild.get_role(int(Cache.hget('roles', '@_id')))
             await interaction.user.edit(nick = str(self.nick), roles = [role], reason = 'Registro')
         else:
             await interaction.user.edit(nick = str(self.nick), reason = 'Actualización')
@@ -41,8 +41,8 @@ class Register(commands.GroupCog, name = 'register'):
     @app_commands.command(name = 'user', description = 'Registro manual')
     @app_commands.describe(user = 'Elija al usuario', nick = 'Ponga su nick')
     async def register(self, interaction: discord.Interaction, user: discord.Member, nick:str): 
-        if not user.get_role(int(Cache.hget('roles', 'foreign_id'))):
-            role = interaction.user.guild.get_role(int(Cache.hget('roles', 'foreign_id')))
+        if not user.get_role(int(Cache.hget('roles', '@_id'))):
+            role = interaction.user.guild.get_role(int(Cache.hget('roles', '@_id')))
             await user.edit(nick = str(nick), roles = [role], reason = 'Registro')
         else:
             await user.edit(nick = str(nick), reason = 'Actualización')
