@@ -1,4 +1,4 @@
-import os
+import os, json
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -15,20 +15,32 @@ class Message(commands.GroupCog, name = 'message'):
         channel = self.bot.get_channel(int(link[-2]))
         return channel.fetch_message(int(link[-1]))
 
+    def getjsonmessage(self, json_content:str):
+        data = json.loads(json_content)
+        embeds_json = data['embeds']
+        embeds = list()
+        for embed_json in embeds_json: 
+            embed = discord.Embed().from_dict(embed_json)
+            embeds.append(embed)
+        data['embeds'] = embeds
+        return data
     ##Message
     #Send
     @app_commands.command(name = 'send', description = 'Enviar un mensaje')
-    @app_commands.describe(content = 'Contenido')
-    async def send(self, interaction: discord.Interaction, content:str):
-        await interaction.channel.send(content=content)
+    @app_commands.describe(json_content = 'Contenido en json')
+    async def send(self, interaction: discord.Interaction, json_content:str):
+        message = self.getjsonmessage(json_content)
+        print(message)
+        await interaction.channel.send(content = message['content'], embeds = message['embeds'])
         return await interaction.response.send_message(content = '🟢',ephemeral = True)
 
     #Edit
     @app_commands.command(name = 'edit', description = 'Editar un mensaje')
-    @app_commands.describe(messagelink = 'Enlace al mensaje', content = 'Nuevo contenido')
-    async def edit(self, interaction: discord.Interaction, messagelink:str, content:str):
-        message = await self.getmessagefromlink(messagelink)
-        await message.edit(content = content)   
+    @app_commands.describe(messagelink = 'Enlace al mensaje', json_content = 'Contenido en json')
+    async def edit(self, interaction: discord.Interaction, messagelink:str, json_content:str):
+        toeditmessage = await self.getmessagefromlink(messagelink)
+        message = self.getjsonmessage(json_content)
+        await toeditmessage.edit(content = message['content'], embeds = message['embeds'])   
         return await interaction.response.send_message(content = '🟢',ephemeral = True)
 
     #Delete

@@ -16,7 +16,7 @@ class Minecraft(commands.GroupCog, name = 'minecraft'):
     def get_server_info(self, ip:str):
         with urllib.request.urlopen("https://api.mcsrvstat.us/2/" + ip) as url:
             requestdata = json.load(url)
-            data = f"**Ip. {ip}**\n"
+            data = f"**IP. {ip}**\n"
             if requestdata['online'] == True:
                 if requestdata.get('hostname',0):
                     data = data + f"\n`{requestdata['hostname']}`"

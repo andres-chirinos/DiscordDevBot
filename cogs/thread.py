@@ -29,7 +29,6 @@ class Set_view(discord.ui.View):
     async def open(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.send_modal(Open_modal(self.bot))
 
-
 class Thread(commands.GroupCog, name = 'thread'):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
