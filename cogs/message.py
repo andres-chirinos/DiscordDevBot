@@ -19,10 +19,11 @@ class Message(commands.GroupCog, name = 'message'):
         data = json.loads(json_content)
         embeds_json = data['embeds']
         embeds = list()
-        for embed_json in embeds_json: 
-            embed = discord.Embed().from_dict(embed_json)
-            embeds.append(embed)
-        data['embeds'] = embeds
+        if embed_json:
+            for embed_json in embeds_json: 
+                embed = discord.Embed().from_dict(embed_json)
+                embeds.append(embed)
+            data['embeds'] = embeds
         return data
     ##Message
     #Send
