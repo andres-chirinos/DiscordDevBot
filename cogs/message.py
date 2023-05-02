@@ -17,13 +17,16 @@ class Message(commands.GroupCog, name = 'message'):
 
     def getjsonmessage(self, json_content:str):
         data = json.loads(json_content)
-        embeds_json = data['embeds']
-        embeds = list()
-        if embed_json:
+        if data['embeds'] == None:
+            data['embeds'] = []
+        else:
+            embeds_json = data['embeds']
+            embeds = list()
             for embed_json in embeds_json: 
                 embed = discord.Embed().from_dict(embed_json)
                 embeds.append(embed)
             data['embeds'] = embeds
+        
         return data
     ##Message
     #Send
@@ -31,7 +34,6 @@ class Message(commands.GroupCog, name = 'message'):
     @app_commands.describe(json_content = 'Contenido en json')
     async def send(self, interaction: discord.Interaction, json_content:str):
         message = self.getjsonmessage(json_content)
-        print(message)
         await interaction.channel.send(content = message['content'], embeds = message['embeds'])
         return await interaction.response.send_message(content = '🟢',ephemeral = True)
 
